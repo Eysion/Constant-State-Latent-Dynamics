@@ -4,6 +4,25 @@
   "private": true,
   "type": "module",
   "description": "Reproducible Node.js MVP for testing bounded latent drift and state-memory scaling.",
+  "keywords": [
+    "latent-dynamics",
+    "streaming-inference",
+    "constant-state",
+    "drift-correction",
+    "memory-scaling",
+    "reproducible-research",
+    "nodejs",
+    "machine-learning"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Eysion/Constant-State-Latent-Dynamics.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eysion/Constant-State-Latent-Dynamics/issues"
+  },
+  "homepage": "https://github.com/Eysion/Constant-State-Latent-Dynamics#readme",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {
     "experiment": "node src/experiment.mjs",
     "test": "node --test"
