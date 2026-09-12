@@ -1,6 +1,6 @@
 # Constant-State Latent Dynamics
 
-This repository provides a small, reproducible study of streaming latent-state updates. The implementation keeps a fixed-dimensional working state and applies a potential-based correction under bounded perturbations. The code is a research baseline, not a production language model or a proof of constant total process memory.
+This repository provides a small, reproducible study of streaming latent-state updates. The implementation is written in TypeScript, bundled for Node.js with Rsbuild, and keeps a fixed-dimensional working state while applying a potential-based correction under bounded perturbations. The code is a research baseline, not a production language model or a proof of constant total process memory.
 
 ## Research question
 
@@ -18,14 +18,17 @@ Here `eta` is the step size, `gamma` controls correction strength, and `xi_t` is
 
 ## Reproduce
 
-Requires Node.js 20 or newer. No third-party dependencies are required.
+Requires Node.js 20 or newer.
 
 ```bash
 npm test
 npm run experiment -- 128000
+npm run train -- 20000
 ```
 
 The experiment uses an 8-dimensional sinusoidal stream with deterministic perturbations. It compares an uncorrected update with a radial correction and emits JSON containing mean squared tracking error, maximum state norm, elapsed time, and V8 heap delta. Heap deltas are diagnostic only; garbage collection makes single-process readings unsuitable for publication-grade memory measurements.
+
+`npm run train` runs the learnable minimal model: a fixed-dimensional latent state, linear input projection, stable linear dynamics, quadratic correction, and online-trained linear readout. It predicts the next value of a generated sinusoid without retaining the sample history.
 
 ## Scope and limitations
 
@@ -33,7 +36,11 @@ The repository does not train slow or fast weights, encode text or video, implem
 
 ## Files
 
-- `src/experiment.mjs` - deterministic experiment.
+- `src/experiment.ts` - deterministic state-scaling experiment.
+- `src/experiment.ts` - deterministic state-scaling experiment.
+- `src/model.ts` - fixed-state streaming predictor.
+- `src/train.ts` - online training entry point.
+- `rsbuild.config.mjs` - Node.js bundle configuration.
 - `test/experiment.test.mjs` - executable smoke test.
 - `paper.md` - expanded technical note.
 

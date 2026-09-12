@@ -24,8 +24,16 @@
   "homepage": "https://github.com/Eysion/Constant-State-Latent-Dynamics#readme",
   "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {
-    "experiment": "node src/experiment.mjs",
-    "test": "node --test"
+    "build": "rsbuild build",
+    "typecheck": "tsc --noEmit",
+    "experiment": "npm run build && node dist/experiment.cjs",
+    "train": "npm run build && node dist/train.cjs",
+    "test": "npm run typecheck && npm run build && node --test test/experiment.test.mjs"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.7.6",
+    "@types/node": "^22.20.2",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20"
