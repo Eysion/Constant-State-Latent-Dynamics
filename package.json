@@ -29,8 +29,11 @@
     "dev:web": "rsbuild dev --config rsbuild.web.mjs",
     "typecheck": "tsc --noEmit",
     "experiment": "npm run build && node dist/experiment.cjs",
+    "discrete": "npm run build && node dist/discrete.cjs",
     "train": "npm run build && node dist/train.cjs",
-    "test": "npm run typecheck && npm run build && node --test test/experiment.test.mjs"
+    "test": "npm run typecheck && npm run build && node --test test/experiment.test.mjs",
+    "workflow": "node tooling/ai-workflow/cli/workflow.mjs",
+    "workflow:check": "node --test tooling/ai-workflow/test/*.test.mjs"
   },
   "devDependencies": {
     "@rsbuild/core": "^1.7.6",

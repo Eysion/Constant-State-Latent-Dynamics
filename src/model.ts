@@ -14,31 +14,50 @@ export class ConstantStateModel {
     readonly dim = 8,
     private readonly eta = 0.08,
     private readonly gamma = 0.02,
-    private readonly learningRate = 0.01
+    private readonly learningRate = 0.01,
   ) {
     this.state = new Float64Array(dim);
-    this.input = Float64Array.from({ length: dim }, (_, i) => 0.15 * Math.sin(i + 1));
-    this.readout = Float64Array.from({ length: dim }, (_, i) => 0.1 * Math.cos(i + 1));
+    this.input = Float64Array.from(
+      { length: dim },
+      (_, i) => 0.15 * Math.sin(i + 1),
+    );
+    this.readout = Float64Array.from(
+      { length: dim },
+      (_, i) => 0.1 * Math.cos(i + 1),
+    );
   }
 
   predict(): number {
     let value = this.bias;
-    for (let i = 0; i < this.dim; i += 1) value += this.readout[i] * this.state[i];
+    for (let i = 0; i < this.dim; i += 1)
+      value += this.readout[i] * this.state[i];
     return value;
   }
 
-  step(input: number, target: number): StepResult {
+  private advance(input: number): void {
     const previous = this.state.slice();
     for (let i = 0; i < this.dim; i += 1) {
       const stableDynamics = 0.82 * this.input[i] * input - previous[i];
       this.state[i] = previous[i] + this.eta * (stableDynamics - this.gamma * previous[i]);
     }
+  }
+
+  forecast(input: number): number {
+    this.advance(input);
+    return this.predict();
+  }
+
+  step(input: number, target: number): StepResult {
+    this.advance(input);
     const prediction = this.predict();
     const error = prediction - target;
-    for (let i = 0; i < this.dim; i += 1) this.readout[i] -= this.learningRate * error * this.state[i];
+    for (let i = 0; i < this.dim; i += 1)
+      this.readout[i] -= this.learningRate * error * this.state[i];
     this.bias -= this.learningRate * error;
     return { prediction, target, squaredError: error * error };
   }
 
-  stateNorm(): number { return Math.hypot(...this.state); }
+  stateNorm(): number {
+    return Math.hypot(...this.state);
+  }
 }
