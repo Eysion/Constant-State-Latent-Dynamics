@@ -24,6 +24,7 @@ Requires Node.js 20 or newer.
 npm test
 npm run experiment -- 128000
 npm run train -- 20000
+npm run dev:web
 ```
 
 The experiment uses an 8-dimensional sinusoidal stream with deterministic perturbations. It compares an uncorrected update with a radial correction and emits JSON containing mean squared tracking error, maximum state norm, elapsed time, and V8 heap delta. Heap deltas are diagnostic only; garbage collection makes single-process readings unsuitable for publication-grade memory measurements.
@@ -41,6 +42,8 @@ The repository does not train slow or fast weights, encode text or video, implem
 - `src/model.ts` - fixed-state streaming predictor.
 - `src/train.ts` - online training entry point.
 - `rsbuild.config.mjs` - Node.js bundle configuration.
+- `rsbuild.web.mjs` - React web bundle configuration.
+- `src/web/` - training and model-testing interface.
 - `test/experiment.test.mjs` - executable smoke test.
 - `paper.md` - expanded technical note.
 
