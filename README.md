@@ -24,10 +24,11 @@ Requires Node.js 20 or newer.
 npm test
 npm run experiment -- 128000
 npm run train -- 20000
+npm run discrete -- 3000
 npm run dev:web
 ```
 
-The experiment uses an 8-dimensional sinusoidal stream with deterministic perturbations. It compares an uncorrected update with a radial correction and emits JSON containing mean squared tracking error, maximum state norm, elapsed time, and V8 heap delta. Heap deltas are diagnostic only; garbage collection makes single-process readings unsuitable for publication-grade memory measurements.
+The experiment uses a seeded autoregressive stream and chronological 60/20/20 train/validation/test split. It reports persistence and one-lag linear baselines alongside the constant-state model. Training and forecasting are separated so test metrics do not update readout parameters. State-norm and task-error metrics are reported independently; V8 heap deltas remain diagnostic only.
 
 `npm run train` runs the learnable minimal model: a fixed-dimensional latent state, linear input projection, stable linear dynamics, quadratic correction, and online-trained linear readout. It predicts the next value of a generated sinusoid without retaining the sample history.
 
@@ -38,14 +39,20 @@ The repository does not train slow or fast weights, encode text or video, implem
 ## Files
 
 - `src/experiment.ts` - deterministic state-scaling experiment.
-- `src/experiment.ts` - deterministic state-scaling experiment.
 - `src/model.ts` - fixed-state streaming predictor.
 - `src/train.ts` - online training entry point.
+- `src/discrete.ts` - parity, modular arithmetic, and finite-state rule benchmark.
 - `rsbuild.config.mjs` - Node.js bundle configuration.
 - `rsbuild.web.mjs` - React web bundle configuration.
 - `src/web/` - training and model-testing interface.
 - `test/experiment.test.mjs` - executable smoke test.
 - `paper.md` - expanded technical note.
+- `docs/compositional-discrete-memory.md` - independent research direction for cue-driven discrete fragment memory.
+- `docs/perceptual-governance-node.md` - separate paper on state-dependent prompt reception, temporal slicing, reflex units, and resource dispatch.
+
+## Next research direction
+
+The original paper remains limited to bounded continuous streaming state. A separate follow-up topic explores whether knowledge is better represented as reusable discrete fragments and their relations. See [Compositional Discrete Memory](docs/compositional-discrete-memory.md); it is a proposal, not a claim about the current implementation.
 
 ## License
 
