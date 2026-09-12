@@ -25,6 +25,8 @@
   "license": "PolyForm-Noncommercial-1.0.0",
   "scripts": {
     "build": "rsbuild build",
+    "build:web": "rsbuild build --config rsbuild.web.mjs",
+    "dev:web": "rsbuild dev --config rsbuild.web.mjs",
     "typecheck": "tsc --noEmit",
     "experiment": "npm run build && node dist/experiment.cjs",
     "train": "npm run build && node dist/train.cjs",
@@ -32,7 +34,12 @@
   },
   "devDependencies": {
     "@rsbuild/core": "^1.7.6",
+    "@rsbuild/plugin-react": "^1.4.6",
     "@types/node": "^22.20.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "typescript": "^5.9.3"
   },
   "engines": {
