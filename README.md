@@ -1,65 +1,42 @@
 # Constant-State Latent Dynamics
 
-**Reproducibility-oriented paper and Node.js MVP**
+This repository provides a small, reproducible study of streaming latent-state updates. The implementation keeps a fixed-dimensional working state and applies a potential-based correction under bounded perturbations. The code is a research baseline, not a production language model or a proof of constant total process memory.
 
-This repository studies a narrow claim: a deterministic streaming update can keep a fixed-dimensional latent working state and apply a potential-based correction under bounded perturbations. It does not establish production LLM quality, JEPA parity, hardware-level O(1) memory, or the original manuscript's 128K benchmark table.
+## Research question
 
-## Abstract
+Can a streaming system limit active state storage independently of sequence length while keeping latent dynamics bounded? The claim is deliberately narrow: if the latent dimension `d` is fixed and no history or output buffer is retained, active state storage is `O(d) = O(1)` in stream length. Runtime overhead, parameters, inputs, outputs, and logging remain outside this claim.
 
-Long-context systems often retain a history-dependent runtime state. We study a deterministic streaming alternative that keeps only a fixed-dimensional latent vector and applies a potential-based correction when its norm leaves a prescribed region. We define the state-memory claim precisely, derive a practical boundedness condition under Lipschitz dynamics and bounded perturbations, and provide a deterministic Node.js experiment. The experiment is a sanity check for state allocation and drift behavior, not evidence of language-model quality or constant total process memory.
+## Update rule
 
-## Defect analysis of the original manuscript
-
-The source manuscript's hypotheses are useful, but its evidence did not support its strongest claims:
-
-- O(1) was used ambiguously. Fixed active state storage is O(d) in stream length only when no history, output buffer, or unbounded log is retained; total process memory need not be constant.
-- Exact memory and accuracy values had no dataset, task, model, hardware, precision, batch size, allocator, seed, or uncertainty protocol, so they are not reported as measurements here.
-- The JEPA and Transformer baselines were undefined and not parameter- or protocol-matched.
-- The stability theorem omitted context dependence, ideal-trajectory definitions, discrete-step conditions, and the distinction between global and local strong convexity.
-- The algorithm stored `H={h_1,...,h_T}`, contradicting a streaming memory claim unless outputs are externalized.
-
-## Model and boundedness condition
-
-Let `h_t in R^d` be the only recurrent working state and `c_t` the current input:
+For latent state `h_t` and current context `c_t`:
 
 ```text
 h_(t+1) = h_t + eta [g_theta(h_t, c_t) - gamma grad V(h_t)] + xi_t
 ```
 
-Parameters are fixed during inference, `||xi_t|| <= xi_max`, and `d` is fixed. Therefore active state storage is O(d)=O(1) in stream length `T`, conditional on the implementation retaining no history. If `g_theta(., c)` is `L_g`-Lipschitz and `V` is `alpha`-strongly convex in the operating region, a sufficient local stability condition is `gamma alpha > L_g` with a sufficiently small step size. The perturbation-dependent invariant radius is proportional to `xi_max/(gamma alpha-L_g)` plus discretization error. This is not a task-accuracy theorem.
+Here `eta` is the step size, `gamma` controls correction strength, and `xi_t` is bounded perturbation. If `g_theta(., c)` is `L_g`-Lipschitz and `V` is `alpha`-strongly convex in the operating region, `gamma alpha > L_g` is a sufficient local condition for bounded error, subject to a sufficiently small discrete step. This condition does not imply task accuracy.
 
-## Reproducible experiment
+## Reproduce
 
-The Node.js program uses an 8-dimensional sinusoidal target stream and deterministic bounded perturbations. It compares an uncorrected update with a radial potential correction and reports mean squared tracking error, maximum state norm, elapsed time, and V8 heap delta. No history array is allocated; only a fixed `Float64Array` is retained.
+Requires Node.js 20 or newer. No third-party dependencies are required.
 
 ```bash
 npm test
 npm run experiment -- 128000
 ```
 
-The output is JSON. Heap deltas are diagnostic only because garbage collection and the JavaScript runtime make one-process readings unsuitable as publication-grade memory benchmarks.
+The experiment uses an 8-dimensional sinusoidal stream with deterministic perturbations. It compares an uncorrected update with a radial correction and emits JSON containing mean squared tracking error, maximum state norm, elapsed time, and V8 heap delta. Heap deltas are diagnostic only; garbage collection makes single-process readings unsuitable for publication-grade memory measurements.
 
-## Limitations and next experiments
+## Scope and limitations
 
-This MVP does not train slow or fast weights, encode text/video, compare against a real JEPA or Transformer, or use industrial data. A full study needs a public dataset, preprocessing, parameter-matched baselines, fixed hardware and precision, repeated seeds with confidence intervals, profiler traces, online-output accounting, and ablations over `gamma`, `eta`, latent dimension, and potential choice.
+The repository does not train slow or fast weights, encode text or video, implement a JEPA or Transformer baseline, or evaluate industrial diagnostic data. A stronger evaluation requires public data and preprocessing, matched baselines, fixed hardware and precision, repeated seeds with uncertainty intervals, profiler traces, online-output accounting, and parameter ablations.
 
-## Repository
+## Files
 
-- `src/experiment.mjs` - deterministic experiment implementation.
+- `src/experiment.mjs` - deterministic experiment.
 - `test/experiment.test.mjs` - executable smoke test.
-- `paper.md` - source manuscript copy for offline reading.
+- `paper.md` - expanded technical note.
 
-## License and contributions
+## License
 
-Released under the [PolyForm Noncommercial License 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0/). See [LICENSE](LICENSE). Commercial use is not permitted. This is a source-available non-commercial license, not an OSI-approved open-source license. Contributions should preserve reproducibility, document assumptions, and avoid presenting synthetic results as evidence for production systems; see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Citation
-
-```bibtex
-@software{constant_state_latent_dynamics,
-  title  = {Constant-State Latent Dynamics},
-  author = {Anonymous Authors},
-  year   = {2026},
-  url    = {https://github.com/Eysion/Constant-State-Latent-Dynamics}
-}
-```
+PolyForm Noncommercial License 1.0.0. Commercial use is not permitted. This is a source-available non-commercial license, not an OSI-approved open-source license. See [LICENSE](LICENSE).
