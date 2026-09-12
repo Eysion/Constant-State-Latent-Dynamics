@@ -1,4 +1,11 @@
 node_modules/
 dist/
+dist-web/
 *.log
 .DS_Store
+
+# local-ai-workflow:start
+# Local state, leases, journals, reports and operator-only inputs.
+/.workflow/state/
+/.workflow/*.local.json
+# local-ai-workflow:end

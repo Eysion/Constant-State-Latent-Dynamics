@@ -1,0 +1,6 @@
+# Local workflow runtime state. It may contain machine-specific paths,
+# command evidence and resumable execution data. Never commit this directory.
+node_modules/
+state/
+coverage/
+.DS_Store

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "executionMode": "loop",
+  "iterations": [
+    {
+      "iteration": 1,
+      "change": "What changed in this iteration",
+      "feedback": "What the automated verifier reported",
+      "progress": "How the remaining failure set became smaller"
+    }
+  ],
+  "elapsedMinutes": 12,
+  "stopReason": "acceptance-passed",
+  "acceptanceEvidence": [
+    "Exact final command and result"
+  ]
+}

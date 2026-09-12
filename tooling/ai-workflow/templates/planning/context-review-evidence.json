@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "kind": "context-review",
+  "guidancePaths": [
+    "AGENTS.md"
+  ],
+  "sourceReferences": [
+    {
+      "path": "src/example.ts",
+      "line": 1,
+      "purpose": "Identify the existing behavior and integration boundary"
+    }
+  ],
+  "verification": [
+    "pnpm test"
+  ]
+}

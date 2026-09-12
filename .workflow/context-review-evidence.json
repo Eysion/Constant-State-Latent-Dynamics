@@ -1,0 +1,1 @@
+{"schemaVersion":1,"kind":"context-review","guidancePaths":["AGENTS.md",".workflow/config.yaml"],"sourceReferences":[{"path":"src/model.ts","line":1,"purpose":"保留固定状态模型接口并隔离训练与预测路径"},{"path":"test/experiment.test.mjs","line":1,"purpose":"沿用现有 Node 测试入口"}],"verification":["npm test","npm run typecheck","npm run build"]}

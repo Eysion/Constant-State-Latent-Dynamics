@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "kind": "quality-assessment",
+  "candidateCount": 3,
+  "selectedCandidateId": "candidate-2",
+  "accuracyScore": 0.9,
+  "threshold": 0.85,
+  "evidence": [
+    { "kind": "verification", "reference": "The project's configured verification command passed" },
+    { "kind": "source-review", "reference": "Reviewed the selected implementation against the owned paths" }
+  ],
+  "decision": "accepted"
+}

@@ -1,0 +1,45 @@
+schemaVersion: 1
+projectName: "constant-state-latent-dynamics"
+workflowDefinition: tooling/ai-workflow/workflows/development-v1.yaml
+stateDirectory: .workflow/state
+sedimentDirectory: docs/workflow-sediment
+planningPolicy:
+  defaultMode: inline
+  structuredSignals: [MULTI_STEP, MULTI_COMPONENT, MULTIPLE_ACCEPTANCE_CHECKS, RESUMABLE_TASK, ITERATIVE_IMPLEMENTATION, LONG_RUNNING_IMPLEMENTATION]
+  openspecSignals: [CROSS_REPO, API_CONTRACT_CHANGE, DATA_MODEL_CHANGE, AUTH_OR_SECURITY_CHANGE, PUBLIC_BEHAVIOR_CHANGE, LONG_LIVED_DESIGN_DECISION]
+executionPolicy:
+  defaultMode: single-pass
+  loopTriggerSignals: [LOOP_REQUESTED, ITERATIVE_ACCEPTANCE, EXPECTED_MULTIPLE_ITERATIONS]
+  loopBlockedSignals: [REQUIREMENT_UNCLEAR, EXTERNAL_SIDE_EFFECT, SENSITIVE_OPERATION]
+  maxIterations: 6
+  noProgressLimit: 2
+  timeBudgetMinutes: 60
+qualityPolicy:
+  enabled: true
+  highRiskSignals: [API_CONTRACT_CHANGE, AUTH_OR_SECURITY_CHANGE, DATA_MODEL_CHANGE, PUBLIC_BEHAVIOR_CHANGE, PRODUCTION_BUG, HIGH_RISK_REQUEST]
+  negativeFeedbackSignals: [USER_DISSATISFACTION]
+  candidateCount: 3
+  accuracyThreshold: 0.85
+evidenceRoutingPolicy:
+  version: 1
+  localFirst: true
+  maxMcpCallsPerRun: 0
+  maxCostUnitsPerRun: 12
+  cache: true
+  capabilities:
+    - id: local-context-search
+      kind: local
+      access: read
+      enabled: true
+      costUnits: 0
+      timeoutMs: 30000
+    - id: local-verification
+      kind: local
+      access: read
+      enabled: true
+      costUnits: 1
+      timeoutMs: 120000
+verification:
+  file: "npm"
+  args: ["run", "test"]
+  timeoutMs: 120000
