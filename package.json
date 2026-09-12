@@ -1,0 +1,15 @@
+{
+  "name": "constant-state-latent-dynamics",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Reproducible Node.js MVP for testing bounded latent drift and state-memory scaling.",
+  "scripts": {
+    "experiment": "node src/experiment.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
